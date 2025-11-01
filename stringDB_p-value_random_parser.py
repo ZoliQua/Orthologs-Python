@@ -11,12 +11,14 @@ import os
 import csv
 import sys
 import random
-import requests ## python -m pip install requests
+import requests
 import pandas as pd
+
+from config import TAXON_ORDER_7, TAXON_DICT
 
 csv.field_size_limit(sys.maxsize)
 
-taxon_dict = {'9606': 'H. sapiens', '7955': 'D. rerio', '6239': 'C. elegans', '3702': 'A. thaliana', '7227': 'D. melanogaster', '4896': 'S. pombe', '4932': 'S. cerevisiae'}
+taxon_dict = {tid: TAXON_DICT[tid] for tid in TAXON_ORDER_7}
 
 for taxid in taxon_dict:
 

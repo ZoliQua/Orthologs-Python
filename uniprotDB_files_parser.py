@@ -13,6 +13,8 @@
 import csv
 import sys
 
+from config import TAXON_DICT_WITH_ALIASES, TAXON_ORDER_7
+
 csv.field_size_limit(sys.maxsize)
 
 source_filenames = ["data/uniprot/ARATH_3702_idmapping.dat",
@@ -23,9 +25,9 @@ source_filenames = ["data/uniprot/ARATH_3702_idmapping.dat",
               "data/uniprot/SCHPO_284812_idmapping.dat",
               "data/uniprot/YEAST_559292_idmapping.dat"]
 
-taxon_dict = {'9606': 'H. sapiens', '7955': 'D. rerio', '6239': 'C. elegans', '3702': 'A. thaliana', '7227': 'D. melanogaster', '4896': 'S. pombe', '284812': 'S. pombe', '559292': 'S. cerevisiae'}
-uniprot_list = {'9606': [], '7955': [], '6239': [], '3702': [], '7227': [], '4896': [], '4932': []}
-eggnog_taxlist = ["9606", "7955", "6239", "3702", "7227", "4896", "4932"]
+taxon_dict = TAXON_DICT_WITH_ALIASES
+uniprot_list = {tid: [] for tid in TAXON_ORDER_7}
+eggnog_taxlist = list(TAXON_ORDER_7)
 write_lines_all = []
 
 for this_file in source_filenames:

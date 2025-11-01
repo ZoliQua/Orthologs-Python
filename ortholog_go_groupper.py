@@ -11,6 +11,8 @@ import csv
 import sys
 import operator
 
+from config import TAXON_DICT_WITH_ALIASES
+
 csv.field_size_limit(sys.maxsize)
 
 # list_of_go_tags = ["0006412", "0006629", "0006914", "0007049", "0007165", "0007568", "0008361", "0042254", "0051301", "0051726"]
@@ -22,16 +24,7 @@ list_of_go_tags = ["0008361", "0002376", "0009295", "0000902", "0006099", "00030
 
 for go_tag in list_of_go_tags:
     filename_go = "data/go/GO-" + go_tag + ".tsv"
-    taxon_dicter = {
-                    '9606': 'H. sapiens',
-                    '7955': 'D. rerio',
-                    '6239': 'C. elegans',
-                    '3702': 'A. thaliana',
-                    '7227': 'D. melanogaster',
-                    '4896': 'S. pombe',
-                    '284812': 'S. pombe',
-                    '559292': 'S. cerevisiae'
-                    }
+    taxon_dicter = TAXON_DICT_WITH_ALIASES
 
     go_listofproteins = {}
     go_subgo = {}

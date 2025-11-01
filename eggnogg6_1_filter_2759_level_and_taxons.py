@@ -16,36 +16,13 @@
 import sys
 import time
 
+from config import TAXON_DICT_WITH_ALIASES, TAXON_ALIASES, TARGET_TAXIDS
+
 source_eggnog_file = "data/eggnog/eggnog6/e6.og2seqs_and_species.tsv"
 export_eggnog_file = "data/eggnog/eggnog6/e6.og2seqs_and_species_filtered_10_species_2759_level.tsv"
 
-# ─────────────────────────────────────────────────────────────────────────────
-# 10 célspecies TaxID konfigurációja
-# S. pombe: kanonikus 4896 + strain alias 284812
-# S. cerevisiae: kanonikus 4932 + S288c alias 559292
-# ─────────────────────────────────────────────────────────────────────────────
-taxon_dict = {
-    '9606':   'H. sapiens',
-    '7955':   'D. rerio',
-    '6239':   'C. elegans',
-    '3702':   'A. thaliana',
-    '7227':   'D. melanogaster',
-    '4896':   'S. pombe',
-    '284812': 'S. pombe',       # strain alias
-    '4932':   'S. cerevisiae',
-    '559292': 'S. cerevisiae',  # S288c strain alias
-    '10090':  'M. musculus',    # ÚJ
-    '10116':  'R. norvegicus',  # ÚJ
-    '8364':   'X. tropicalis',  # ÚJ
-}
-
-# Kanonikus TaxID-k (alias → kanonikus mapping)
-canonical_taxid = {
-    '284812': '4896',
-    '559292': '4932',
-}
-
-TARGET_TAXIDS = set(taxon_dict.keys())
+taxon_dict = TAXON_DICT_WITH_ALIASES
+canonical_taxid = TAXON_ALIASES
 
 # ─────────────────────────────────────────────────────────────────────────────
 # Feldolgozás

@@ -25,36 +25,17 @@ import csv
 import sys
 import time
 
+from config import TAXON_DICT, TAXON_ORDER_10, TAXON_ALIASES, TARGET_TAXIDS
+
 csv.field_size_limit(sys.maxsize)
 
 source_file          = "data/eggnog/eggnog5/2759_members.tsv"
 export_groups_file   = "data/eggnog/eggnog5db_10_species_by_groups.tsv"
 export_protein_tmpl  = "data/eggnog/eggnog5db_{taxid}_protein_list.tsv"
 
-# ─────────────────────────────────────────────────────────────────────────────
-# 10 célspecies — kanonikus TaxID-k
-# ─────────────────────────────────────────────────────────────────────────────
-taxon_dict = {
-    '9606':  'H. sapiens',
-    '7955':  'D. rerio',
-    '6239':  'C. elegans',
-    '3702':  'A. thaliana',
-    '7227':  'D. melanogaster',
-    '4896':  'S. pombe',
-    '4932':  'S. cerevisiae',
-    '10090': 'M. musculus',
-    '10116': 'R. norvegicus',
-    '8364':  'X. tropicalis',
-}
-
-# Alias → kanonikus TaxID
-canonical_taxid = {
-    '284812': '4896',   # S. pombe strain
-    '559292': '4932',   # S. cerevisiae S288c
-}
-
-TAXON_ORDER = ['9606', '7955', '6239', '3702', '7227', '4896', '4932', '10090', '10116', '8364']
-TARGET_TAXIDS = set(taxon_dict.keys()) | set(canonical_taxid.keys())
+taxon_dict = TAXON_DICT
+canonical_taxid = TAXON_ALIASES
+TAXON_ORDER = list(TAXON_ORDER_10)
 
 # ─────────────────────────────────────────────────────────────────────────────
 # Feldolgozás
