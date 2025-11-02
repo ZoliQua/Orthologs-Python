@@ -56,7 +56,7 @@ with open(filename_go, newline = '') as f:
             # if counter == 100:
             #     break
     except csv.Error as e:
-        sys.exit('file {}, line {}: {}'.format(filename, reader.line_num, e))
+        sys.exit('file {}, line {}: {}'.format(filename_go, reader.line_num, e))
 
 print(f"Parser have {counter} lines processed from {filename_go} file.")
 
@@ -92,7 +92,7 @@ with open(filename_uniprot_convert, newline = '') as f:
                     eggNOG_database[row['groupid']] = {row['taxid']: [row['uniprot']]}
 
     except csv.Error as e:
-        sys.exit('file {}, line {}: {}'.format(filename, reader.line_num, e))
+        sys.exit('file {}, line {}: {}'.format(filename_uniprot_convert, reader.line_num, e))
 
     print("Parser have", counter, "lines processed from eggNOG merged file.")
 

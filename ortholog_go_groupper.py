@@ -41,7 +41,7 @@ for go_tag in list_of_go_tags:
                 # if counter == 100:
                 #     break
         except csv.Error as e:
-            sys.exit('file {}, line {}: {}'.format(filename, reader.line_num, e))
+            sys.exit('file {}, line {}: {}'.format(filename_go, reader.line_num, e))
 
     filename = "data/uniprot_convert_merged.tsv"
     taxon_list = ['3702', '6239', '7227', '7955', '9606', '559292', '284812']

@@ -62,7 +62,7 @@ for this_file in source_filenames:
                 #     break
 
         except csv.Error as e:
-            sys.exit('file {}, line {}: {}'.format(filename, reader.line_num, e))
+            sys.exit('file {}, line {}: {}'.format(this_file, reader.line_num, e))
 
         print("Parser have", counter, "lines processed.")
 

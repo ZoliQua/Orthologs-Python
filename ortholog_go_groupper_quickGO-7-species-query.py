@@ -118,7 +118,7 @@ with open(filename_uniprot_convert, newline = '') as f:
                     eggNOG_database[row['groupid']] = {row['taxid']: [row['uniprot']]}
 
     except csv.Error as e:
-        sys.exit('file {}, line {}: {}'.format(filename, reader.line_num, e))
+        sys.exit('file {}, line {}: {}'.format(filename_uniprot_convert, reader.line_num, e))
 
     print("Parser have", counter, "lines processed from UniProt's eggNOG merged file.")
 

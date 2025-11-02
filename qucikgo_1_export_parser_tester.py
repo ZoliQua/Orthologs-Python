@@ -9,6 +9,7 @@
 # Contact me at zoltan dul [at] gmail.com
 
 import csv
+import sys
 
 # Sourse file
 filename = "data/go/go_reg_of_cc.tsv"
