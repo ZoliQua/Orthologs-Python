@@ -91,7 +91,7 @@ for goid, filename in sources.items():
 
 			corr = df[df["taxid"] == taxon].corr(method = corr_type)
 			export_row = [goid, corr_type]
-			for element in corr["hm_average"].iteritems():
+			for element in corr["hm_average"].items():
 				if element[0] == "taxid":
 					export_row.append(taxon)
 				elif element[0] == "bottle_1":
@@ -108,7 +108,7 @@ for goid, filename in sources.items():
 			#
 			# 	corr = df[(df["taxid"] == taxon) & (df["bottle_1"] == bottle_1)].corr(method=corr_type)
 			# 	export_row = [goid, corr_type]
-			# 	for element in corr["hm_average"].iteritems():
+			# 	for element in corr["hm_average"].items():
 			# 		if element[0] == "taxid":
 			# 			export_row.append(taxon)
 			# 		elif element[0] == "bottle_1":
