@@ -15,7 +15,10 @@ import random
 import logging
 import signal
 import time
-import requests  # python -m pip install requests
+import requests
+from requests.adapters import HTTPAdapter, Retry
+
+from config import STRING_API_URL, STRING_OUTPUT_FORMAT, STRING_METHOD_PPI, STRING_CALLER_IDENTITY
 
 # maximalise file-read size
 csv.field_size_limit(sys.maxsize)
@@ -162,12 +165,35 @@ def time_out(interval, doc):
         return wrapper
     return decorator
 
+# Session with retry logic for STRING API calls
+_retries = Retry(total=3, backoff_factor=0.5, status_forcelist=[429, 500, 502, 503, 504])
+_session = requests.Session()
+_session.mount("https://", HTTPAdapter(max_retries=_retries))
+
+
+def string_api_request(protein_ids, taxid, method=STRING_METHOD_PPI):
+    """Make a STRING API request with retry logic and timeout."""
+    request_url = "/".join([STRING_API_URL, STRING_OUTPUT_FORMAT, method])
+    params = {
+        "identifiers": "%0d".join(protein_ids),
+        "species": int(taxid),
+        "caller_identity": STRING_CALLER_IDENTITY,
+    }
+    try:
+        response = _session.post(request_url, data=params, timeout=10)
+        response.raise_for_status()
+        return response
+    except requests.RequestException as e:
+        logging.warning(f"STRING API request failed: {e}")
+        return False
+
+
 @time_out(1, "Function call")
 def request_in_time(req, par):
-    #print("task1 start")
     try:
-        response = requests.post(req, data = par)
-    except:
+        response = requests.post(req, data=par)
+    except requests.RequestException as e:
+        logging.warning(f"Request failed: {e}")
         response = False
     return response
 
