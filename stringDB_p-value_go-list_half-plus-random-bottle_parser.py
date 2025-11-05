@@ -168,7 +168,7 @@ for str_goid in list_goids:
 						this_random_selection = random.choice(list_of_bottle_proteins)
 						try:
 							this_string_id = uniprot_2_stringid[this_random_selection]
-						except:
+						except KeyError:
 							count_warning += 1
 							logging.warning(f"This {this_random_selection} is not in uniprot-id array")
 							if count_warning <= 100:

@@ -15,6 +15,7 @@ import time
 import logging
 from datetime import datetime
 import urllib.request as rqs
+import urllib.error
 import json
 import pandas as pd
 
@@ -209,7 +210,8 @@ class Children:
 		try:
 			content = rqs.urlopen(page).read()
 			return content
-		except:
+		except (urllib.error.URLError, urllib.error.HTTPError) as e:
+			logging.warning(f"URL request failed: {e}")
 			return False
 
 	def GetChildren(self, goid, level, parent_goid=None):
@@ -352,9 +354,9 @@ def WriteTSVFile(go_id, tax_id, export_filename, write_this_array, split=False, 
 
 			try:
 				writer.writerow(line)
-			except:
-				log_this = "GO id: " + go_id + "TaxID: " + str(tax_id) + "Counter: " + counter
-				logging.error(log_this)
+			except (csv.Error, TypeError) as e:
+				log_this = "GO id: " + go_id + "TaxID: " + str(tax_id) + "Counter: " + str(counter)
+				logging.error(f"{log_this}: {e}")
 
 	log_this = "GO id: " + go_id + "TaxID: " + str(tax_id) + "Filename: " + export_filename + "successful."
 	logging.info(log_this)
