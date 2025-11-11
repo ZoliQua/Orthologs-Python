@@ -8,8 +8,8 @@ import requests
 from requests.adapters import HTTPAdapter, Retry
 
 
-POLLING_INTERVAL = 3
-API_URL = "https://rest.uniprot.org"
+POLLING_INTERVAL: int = 3
+API_URL: str = "https://rest.uniprot.org"
 
 
 retries = Retry(total=5, backoff_factor=0.25, status_forcelist=[500, 502, 503, 504])
@@ -17,7 +17,7 @@ session = requests.Session()
 session.mount("https://", HTTPAdapter(max_retries=retries))
 
 
-def check_response(response):
+def check_response(response: requests.Response) -> None:
     try:
         response.raise_for_status()
     except requests.HTTPError:
@@ -25,7 +25,7 @@ def check_response(response):
         raise
 
 
-def submit_id_mapping(from_db, to_db, ids):
+def submit_id_mapping(from_db: str, to_db: str, ids: list[str]) -> str:
     request = requests.post(
         f"{API_URL}/idmapping/run",
         data={"from": from_db, "to": to_db, "ids": ",".join(ids)},
@@ -34,7 +34,7 @@ def submit_id_mapping(from_db, to_db, ids):
     return request.json()["jobId"]
 
 
-def get_next_link(headers):
+def get_next_link(headers: dict) -> str | None:
     re_next_link = re.compile(r'<(.+)>; rel="next"')
     if "Link" in headers:
         match = re_next_link.match(headers["Link"])
@@ -42,7 +42,7 @@ def get_next_link(headers):
             return match.group(1)
 
 
-def check_id_mapping_results_ready(job_id):
+def check_id_mapping_results_ready(job_id: str) -> bool:
     while True:
         request = session.get(f"{API_URL}/idmapping/status/{job_id}")
         check_response(request)
@@ -57,7 +57,7 @@ def check_id_mapping_results_ready(job_id):
             return bool(j["results"] or j["failedIds"])
 
 
-def get_batch(batch_response, file_format, compressed):
+def get_batch(batch_response: requests.Response, file_format: str, compressed: bool):
     batch_url = get_next_link(batch_response.headers)
     while batch_url:
         batch_response = session.get(batch_url)
@@ -66,7 +66,7 @@ def get_batch(batch_response, file_format, compressed):
         batch_url = get_next_link(batch_response.headers)
 
 
-def combine_batches(all_results, batch_results, file_format):
+def combine_batches(all_results: list | dict, batch_results: list | dict, file_format: str):
     if file_format == "json":
         for key in ("results", "failedIds"):
             if key in batch_results and batch_results[key]:
@@ -78,14 +78,14 @@ def combine_batches(all_results, batch_results, file_format):
     return all_results
 
 
-def get_id_mapping_results_link(job_id):
+def get_id_mapping_results_link(job_id: str) -> str:
     url = f"{API_URL}/idmapping/details/{job_id}"
     request = session.get(url)
     check_response(request)
     return request.json()["redirectURL"]
 
 
-def decode_results(response, file_format, compressed):
+def decode_results(response: requests.Response, file_format: str, compressed: bool):
     if compressed:
         decompressed = zlib.decompress(response.content, 16 + zlib.MAX_WBITS)
         if file_format == "json":
@@ -110,12 +110,12 @@ def decode_results(response, file_format, compressed):
     return response.text
 
 
-def get_xml_namespace(element):
+def get_xml_namespace(element: ElementTree.Element) -> str:
     m = re.match(r"\{(.*)\}", element.tag)
     return m.groups()[0] if m else ""
 
 
-def merge_xml_results(xml_results):
+def merge_xml_results(xml_results: list[str]) -> bytes:
     merged_root = ElementTree.fromstring(xml_results[0])
     for result in xml_results[1:]:
         root = ElementTree.fromstring(result)
@@ -125,12 +125,12 @@ def merge_xml_results(xml_results):
     return ElementTree.tostring(merged_root, encoding="utf-8", xml_declaration=True)
 
 
-def print_progress_batches(batch_index, size, total):
+def print_progress_batches(batch_index: int, size: int, total: int) -> None:
     n_fetched = min((batch_index + 1) * size, total)
     print(f"Fetched: {n_fetched} / {total}")
 
 
-def get_id_mapping_results_search(url):
+def get_id_mapping_results_search(url: str):
     parsed = urlparse(url)
     query = parse_qs(parsed.query)
     file_format = query["format"][0] if "format" in query else "json"
@@ -157,7 +157,7 @@ def get_id_mapping_results_search(url):
     return results
 
 
-def get_id_mapping_results_stream(url):
+def get_id_mapping_results_stream(url: str):
     if "/stream/" not in url:
         url = url.replace("/results/", "/results/stream/")
     request = session.get(url)

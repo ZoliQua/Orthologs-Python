@@ -8,15 +8,15 @@
 from datetime import datetime
 
 # Timestamp for output filenames
-now = datetime.now()
-TIMESTAMP = now.strftime("%Y%m%d-%H%M%S-%f")
+now: datetime = datetime.now()
+TIMESTAMP: str = now.strftime("%Y%m%d-%H%M%S-%f")
 
 ###############################################################################
 # Taxon Configuration
 ###############################################################################
 
 # 10 canonical target species (TaxID → species name)
-TAXON_DICT = {
+TAXON_DICT: dict[str, str] = {
     '9606':  'H. sapiens',
     '7955':  'D. rerio',
     '6239':  'C. elegans',
@@ -30,30 +30,30 @@ TAXON_DICT = {
 }
 
 # Ordered canonical TaxID lists
-TAXON_ORDER_10 = ('9606', '7955', '6239', '3702', '7227', '4896', '4932', '10090', '10116', '8364')
-TAXON_ORDER_7 = ('9606', '7955', '6239', '3702', '7227', '4896', '4932')
+TAXON_ORDER_10: tuple[str, ...] = ('9606', '7955', '6239', '3702', '7227', '4896', '4932', '10090', '10116', '8364')
+TAXON_ORDER_7: tuple[str, ...] = ('9606', '7955', '6239', '3702', '7227', '4896', '4932')
 
 # Alias TaxIDs → canonical TaxID (strain-level IDs mapped to species-level)
-TAXON_ALIASES = {
+TAXON_ALIASES: dict[str, str] = {
     '284812': '4896',   # S. pombe strain 972h-
     '559292': '4932',   # S. cerevisiae S288c
 }
 
 # Extended dict including aliases (for lookup when data uses alias TaxIDs)
-TAXON_DICT_WITH_ALIASES = {
+TAXON_DICT_WITH_ALIASES: dict[str, str] = {
     **TAXON_DICT,
     '284812': 'S. pombe',
     '559292': 'S. cerevisiae',
 }
 
 # All TaxIDs that should be recognized (canonical + aliases)
-TARGET_TAXIDS = set(TAXON_DICT.keys()) | set(TAXON_ALIASES.keys())
+TARGET_TAXIDS: set[str] = set(TAXON_DICT.keys()) | set(TAXON_ALIASES.keys())
 
 # Taxon GO column names (for pandas DataFrames in STRING analysis)
-TAXON_DICT_GO = {tid: f'{name} Hit' for tid, name in TAXON_DICT.items()}
+TAXON_DICT_GO: dict[str, str] = {tid: f'{name} Hit' for tid, name in TAXON_DICT.items()}
 
 # Extended species name dict including subspecies aliases (for QuickGO/UniProt data)
-TAXON_DICT_NAMES = {
+TAXON_DICT_NAMES: dict[str, str] = {
     '9606':   'H. sapiens',
     '63221':  'H. sapiens',       # H. sapiens neanderthalensis
     '741158': 'H. sapiens',       # H. sapiens ssp. Denisova
@@ -74,19 +74,19 @@ TAXON_DICT_NAMES = {
 # STRING API Configuration
 ###############################################################################
 
-STRING_API_URL = "https://string-db.org/api"
-STRING_OUTPUT_FORMAT = "tsv-no-header"
-STRING_METHOD_PPI = "ppi_enrichment"
-STRING_CALLER_IDENTITY = "zdul_orthologs"
+STRING_API_URL: str = "https://string-db.org/api"
+STRING_OUTPUT_FORMAT: str = "tsv-no-header"
+STRING_METHOD_PPI: str = "ppi_enrichment"
+STRING_CALLER_IDENTITY: str = "zdul_orthologs"
 
-def get_string_request_url(method=STRING_METHOD_PPI):
+def get_string_request_url(method: str = STRING_METHOD_PPI) -> str:
     return "/".join([STRING_API_URL, STRING_OUTPUT_FORMAT, method])
 
 ###############################################################################
 # GO SLIM Generic Terms
 ###############################################################################
 
-GO_SLIM_GENERIC = {
+GO_SLIM_GENERIC: dict[str, str] = {
     'GO:1901135': 'carbohydrate derivative metabolic process',
     'GO:0140053': 'mitochondrial gene expression',
     'GO:0140014': 'mitotic nuclear division',
@@ -164,7 +164,7 @@ GO_SLIM_GENERIC = {
     'GO:0000278': 'mitotic cell cycle',
 }
 
-GO_SELECTED_10 = {
+GO_SELECTED_10: dict[str, str] = {
     'GO:0007049': 'cell cycle',
     'GO:0000902': 'cell morphogenesis',
     'GO:0006259': 'DNA metabolic process',

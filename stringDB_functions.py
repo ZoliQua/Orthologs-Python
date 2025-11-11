@@ -46,7 +46,7 @@ list_of_uniprotids = []
 ###################################################
 
 
-def ReadUniprotConvert(taxid):
+def ReadUniprotConvert(taxid: str) -> int:
 
 	global uniprot_2_protname
 	global uniprot_2_stringid
@@ -91,7 +91,7 @@ def ReadUniprotConvert(taxid):
 #################################
 
 
-def WriteExportFile(export_filename, write_this_array):
+def WriteExportFile(export_filename: str, write_this_array: list) -> int:
 
 	counter = 0
 
@@ -105,7 +105,7 @@ def WriteExportFile(export_filename, write_this_array):
 	return counter
 
 
-def ParseGODataFrame(go_dataframe, column_name_taxon, column_name_hm_value, num_proteins):
+def ParseGODataFrame(go_dataframe, column_name_taxon: str, column_name_hm_value: str, num_proteins: int) -> dict | bool:
 	
 	# Protein list from the filtered pandas dataset of this species
 	list_of_bottle_proteins = []
@@ -145,11 +145,11 @@ def ParseGODataFrame(go_dataframe, column_name_taxon, column_name_hm_value, num_
 class TimeoutError(Exception): pass
 
 #  Call this function exceeds timeout
-def handler(signum, frame):
+def handler(signum: int, frame) -> None:
     raise TimeoutError()
 
 #  Function timeout decorator
-def time_out(interval, doc):
+def time_out(interval: int, doc: str):
     def decorator(func):
         def wrapper(*args, **kwargs):
             try:
@@ -171,7 +171,7 @@ _session = requests.Session()
 _session.mount("https://", HTTPAdapter(max_retries=_retries))
 
 
-def string_api_request(protein_ids, taxid, method=STRING_METHOD_PPI):
+def string_api_request(protein_ids: list[str], taxid: str, method: str = STRING_METHOD_PPI) -> requests.Response | bool:
     """Make a STRING API request with retry logic and timeout."""
     request_url = "/".join([STRING_API_URL, STRING_OUTPUT_FORMAT, method])
     params = {
@@ -189,7 +189,7 @@ def string_api_request(protein_ids, taxid, method=STRING_METHOD_PPI):
 
 
 @time_out(1, "Function call")
-def request_in_time(req, par):
+def request_in_time(req: str, par: dict) -> requests.Response | bool:
     try:
         response = requests.post(req, data=par)
     except requests.RequestException as e:
